@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VNIT Grievance Complaints Dashboard</title>
+  <style>
+    body {
+      background: url('vnitpic.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      color: white;
+      margin: 0;
+      padding: 30px;
+    }
+    h1 {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 10px;
+      border-radius: 8px;
+      display: inline-block;
+    }
+    table {
+      width: 98%; /* Increased width */
+      margin: 30px auto;
+      border-collapse: collapse;
+      background: rgba(255,255,255,0.98); /* More opaque */
+      color: black;
+      border-radius: 10px;
+      overflow: hidden;
+      font-size: 0.9em; /* Slightly smaller text */
+    }
+    th, td {
+      padding: 8px; /* Reduced padding */
+      border: 1px solid #ddd;
+      text-align: left; /* Align text left */
+    }
+    th {
+      background: #004aad;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background: #f2f2f2;
+    }
+    .filter-bar {
+      margin: 20px;
+    }
+    /* Style for inputs inside the table */
+    td input, td select {
+      width: 95%;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .update-btn {
+      padding: 6px 12px;
+      background: #28a745; /* Green */
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+   .update-btn:hover {
+    background: #218838;
+    }
+
+    /* ===== ADD THE NEW CSS RULE HERE (around line 84) ===== */
+    .emergency-row {
+      background-color: #fff0f0 !important; /* A light red background */
+      font-weight: bold;
+      color: #b71c1c; /* Dark red text */
+    }
+    .emergency-row:hover {
+      background-color: #ffe0e0 !important; /* Darker red on hover */
+    }
+    /* ====================================================== */
+    /* ... (your existing emergency-row styles) ... */
+
+    /* ===== ADD THIS CSS FOR THE NEW FORM ===== */
+    .form-container {
+      background: rgba(255, 255, 255, 0.95);
+      color: #333;
+      padding: 20px;
+      border-radius: 8px;
+      display: inline-block;
+      margin-bottom: 30px;
+      text-align: left;
+      border: 1px solid #ccc;
+    }
+    .form-container h2 {
+      margin-top: 0;
+      color: #004aad;
+    }
+    .form-container label {
+      display: block;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+    .form-container input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .form-container button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 10px;
+      background: #004aad;
+    }
+    /* ========================================= */
+  </style>
+</head>
+<body>
+  <img src="vnitlogo.jpeg" width="90" />
+  <h1>🏠 VNIT Grievance Complaints Dashboard</h1>
+  <h1>🏠 VNIT Grievance Complaints Dashboard</h1>
+
+  <!-- ===== ADD THIS NEW FORM ===== -->
+  <div class="form-container">
+    <h2>Add New Admin Account</h2>
+    <form action="/add-admin" method="post">
+      <label>New Admin Username:</label>
+      <input type="text" name="username" required>
+      <label>New Admin Password:</label>
+      <input type="password" name="password" required>
+      <label>Recovery Email:</label>
+      <input type="email" name="email" required>
+      <button type="submit">Add Admin</button>
+    </form>
+  </div>
+  <!-- =========================== -->
+
+
+    <!-- ... (your filters) ... -->
+
+  <div class="filter-bar">
+    <input type="text" id="hostelFilter" placeholder="Filter by hostel" />
+    <select id="categoryFilter">
+      <option value="">All Categories</option>
+      <option value="Electrical">Electrical</option>
+      <option value="Technical">Technical</option>
+      <option value="Water">Water</option>
+      <option value="Cleanliness">Cleanliness</option>
+    </select>
+    <select id="statusFilter">
+        <option value="">All Statuses</option>
+        <option value="Pending">Pending</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Completed">Completed</option>
+    </select>
+    <button onclick="applyFilters()">Apply Filters</button>
+    <button onclick="filterEmergencyOnly()" style="background: #d32f2f;">Show Emergency Only</button>
+  </div>
+
+  <table id="complaintTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Submitted</th>
+        <th>Student</th>
+        <th>Hostel/Room</th>
+        <th>Category</th>
+        <th>Complaint</th>
+        <th>Status</th>
+        <th>Technician</th>
+        <th>Tech Contact</th>
+        <th>Feedback</th>
+        <th>Image</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    let allComplaints = [];
+
+    async function fetchComplaints() {
+      const res = await fetch('/get-complaints');
+      allComplaints = await res.json();
+
+      // ===== NEW SORTING LOGIC =====
+      allComplaints.sort((a, b) => {
+        // If 'a' is an emergency and 'b' is not, 'a' comes first
+        if (a.isEmergency && !b.isEmergency) return -1;
+        // If 'b' is an emergency and 'a' is not, 'b' comes first
+        if (!a.isEmergency && b.isEmergency) return 1;
+        
+        // If both are emergency or both are not, sort by newest (complaintId)
+        return b.complaintId.localeCompare(a.complaintId);
+      });
+      // ===== END OF SORTING LOGIC =====
+
+      renderTable(allComplaints);
+    }
+function renderTable(data) {
+      const tbody = document.querySelector('#complaintTable tbody');
+      
+      // NEW: Updated the table row template
+      tbody.innerHTML = data.map(c => `
+        <tr data-id="${c.complaintId}" class="${c.isEmergency ? 'emergency-row' : ''}">
+          <td>${c.isEmergency ? '⚠️ ' : ''}${c.complaintId}</td>
+          
+          <td>${c.submitted}</td> 
+          <td>${c.name} (${c.id})</td>
+          <td>${c.hostel} (${c.room})</td>
+          <td>${c.category}</td>
+          <td>${c.complaint}</td>
+          
+          <td>
+            <select id="status-${c.complaintId}">
+              <option value="Pending" ${c.status === 'Pending' ? 'selected' : ''}>Pending</option>
+              <option value="In Progress" ${c.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+              <option value="Completed" ${c.status === 'Completed' ? 'selected' : ''}>Completed</option>
+            </select>
+          </td>
+
+          <td><input type="text" id="tech-${c.complaintId}" value="${c.technician}"></td>
+          <td><input type="text" id="contact-${c.complaintId}" value="${c.techContact}"></td>
+          
+          <td>${c.feedback || 'N/A'}</td>
+          <td>
+        ${c.imageFile ? 
+          `<a href="/uploads/${c.imageFile}" target="_blank">View Image</a>` : 
+          'N/A'}
+      </td>
+
+          <td><button class="update-btn" onclick="updateComplaint('${c.complaintId}')">Update</button></td>
+        </tr>
+      `).join('');
+    }
+
+    function applyFilters() {
+      const hostel = document.getElementById('hostelFilter').value.toLowerCase();
+      const category = document.getElementById('categoryFilter').value.toLowerCase();
+      const status = document.getElementById('statusFilter').value.toLowerCase(); // NEW status filter
+
+      const filtered = allComplaints.filter(c => {
+        return (!hostel || c.hostel.toLowerCase().includes(hostel)) &&
+               (!category || c.category.toLowerCase() === category) &&
+               (!status || c.status.toLowerCase() === status); // NEW
+      });
+
+      renderTable(filtered);
+    }
+    // ===== ADD THIS NEW FUNCTION =====
+    function filterEmergencyOnly() {
+      // Clear other filters
+      document.getElementById('hostelFilter').value = '';
+      document.getElementById('categoryFilter').value = '';
+      document.getElementById('statusFilter').value = '';
+
+      // Filter for emergency
+      const emergencyOnly = allComplaints.filter(c => c.isEmergency);
+      renderTable(emergencyOnly);
+    }
+    // ===== END OF NEW FUNCTION =====
+
+    // NEW: Function to handle the update
+    async function updateComplaint(complaintId) {
+      // 1. Get the new values from the row
+      const status = document.getElementById(`status-${complaintId}`).value;
+      const technician = document.getElementById(`tech-${complaintId}`).value;
+      const techContact = document.getElementById(`contact-${complaintId}`).value;
+
+      // 2. Send the data to the server
+      const res = await fetch('/update-complaint', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          complaintId,
+          status,
+          technician,
+          techContact
+        }),
+      });
+
+      const result = await res.json();
+
+      if (result.success) {
+        alert('Complaint updated successfully!');
+        // Refresh the data to show changes (especially for feedback later)
+        fetchComplaints();
+      } else {
+        alert('Error updating complaint: ' + result.message);
+      }
+    }
+
+    fetchComplaints();
+  </script>
+</body>
+</html>

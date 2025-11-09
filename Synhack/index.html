@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VNIT Grievance Portal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="student-body">
+
+  <!-- 3-Line Menu -->
+  <div class="menu-icon" onclick="toggleMenu()">☰</div>
+  <div id="dropdownMenu" class="dropdown">
+    <a href="#" onclick="openAbout()">About</a>
+    <a href="/admin">Admin Login</a>
+    <a href="/student-logout" style="color: #b71c1c;">Logout</a> <!-- Added Logout -->
+  </div>
+
+  <h1>Welcome VNITians 🚀</h1>
+  <p>Submit your hostel or campus complaint below.</p>
+
+  <!-- 
+    This is the single, correct form.
+    Note the 'enctype' attribute for file uploads.
+  -->
+  <form action="/submit" method="post" enctype="multipart/form-data" class="complaint-form">
+  
+    <!-- ALL FIELDS MUST GO *INSIDE* THIS FORM TAG -->
+
+    <label>Your Name:</label>
+    <input type="text" name="name" required>
+
+    <label>Student ID:</label>
+    <input type="text" name="id" required>
+
+    <label>Hostel:</label>
+    <input type="text" name="hostel" required>
+
+    <label>Room Number:</label>
+    <input type="text" name="room" required>
+
+    <label>Category:</label>
+    <select name="category" required>
+      <option value="">Select Category</option>
+      <option value="Technical">Technical</option>
+      <option value="Electrical">Electrical</option>
+      <option value="Water">Water</option>
+      <option value="Cleanliness">Cleanliness</option>
+    </select>
+
+    <label>Complaint Description:</label>
+    <textarea name="complaint" placeholder="Describe your issue..." required></textarea>
+
+    <!-- The Image Upload Field -->
+    <label>Upload Image (Optional):</label>
+    <input type="file" name="complaintImage" accept="image/png, image/jpeg">
+
+    <!-- The Emergency Checkbox -->
+    <div style="margin-top: 15px; background: #fff8e1; padding: 10px; border-radius: 5px;">
+        <input type="checkbox" name="emergency" id="emergencyCheck" style="width: auto; margin-right: 8px;">
+        <label for="emergencyCheck" style="display: inline; color: #b71c1c; font-weight: bold;">
+            This is an EMERGENCY!
+        </label>
+        <p style="font-size: 0.8em; margin: 5px 0 0 0; color: #555;">(e.g., Major water leak, Total power outage, Fire hazard)</p>
+    </div>
+
+    <label>Preferred Time Slot:</label>
+    <select name="timeslot" required>
+      <option value="">Select</option>
+      <option>9:00 AM - 11:00 AM</option>
+      <option>11:00 AM - 1:00 PM</option>
+      <option>2:00 PM - 4:00 PM</option>
+      <option>4:00 PM - 6:00 PM</option>
+    </select>
+
+    <!-- The Submit Button -->
+    <button type="submit">Submit Complaint</button>
+  
+  </form> <!-- The form tag closes HERE, after everything -->
+
+
+  <script>
+    function toggleMenu() {
+      document.getElementById("dropdownMenu").classList.toggle("show");
+    }
+
+    function openAbout() {
+      alert("The VNIT Grievance Portal helps students report issues in Technical, Electrical, Water, and Cleanliness categories and tracks them efficiently.");
+    }
+
+    window.onclick = function(event) {
+      if (!event.target.matches('.menu-icon')) {
+        document.getElementById("dropdownMenu").classList.remove("show");
+      }
+    };
+  </script>
+</body>
+</html>

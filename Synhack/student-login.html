@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Login - VNIT Portal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="admin-body">
+  <div class="admin-container">
+    <img src="vnitlogo.jpeg" alt="VNIT Logo" style="width:90px;">
+    <h1>Student Login</h1>
+    <p style="margin-bottom: 15px;">Use your Student ID and password to log in.</p>
+    
+    <!-- This form points to our new /student-login route -->
+    <form action="/student-login" method="post">
+      <label>Student ID (Username):</label>
+      <input type="text" name="username" required>
+      <label>Password:</label>
+      <input type="password" name="password" required>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+</body>
+</html>

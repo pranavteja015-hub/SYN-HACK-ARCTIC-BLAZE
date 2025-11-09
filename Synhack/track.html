@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Your Complaint - VNIT Portal</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Using styles from style.css but adding some specifics */
+    body {
+      background: url("vnitpic.jpg") no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      text-align: center;
+      padding: 50px;
+    }
+    .track-container {
+      background: rgba(255, 255, 255, 0.95);
+      color: black;
+      border-radius: 15px;
+      padding: 30px;
+      display: inline-block;
+      text-align: left;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+      margin-top: 20px;
+    }
+    .track-container input {
+      width: 70%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .track-container button {
+      width: 28%;
+      padding: 10px;
+      margin-left: 1%;
+    }
+    #resultBox {
+      margin-top: 20px;
+      text-align: left;
+    }
+    #resultBox p {
+      margin: 10px 0;
+      font-size: 1.1em;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+    }
+    #resultBox span {
+      font-weight: 600;
+      color: #004aad;
+      display: inline-block;
+      min-width: 120px;
+    }
+    #feedbackForm {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 2px solid #004aad;
+    }
+    #feedbackForm textarea {
+      width: 100%;
+      min-height: 80px;
+      margin-top: 10px;
+    }
+    #feedbackForm button {
+      width: 100%;
+      margin-top: 10px;
+      background: #28a745;
+    }
+    #feedbackForm button:hover {
+      background: #218838;
+    }
+  </style>
+</head>
+<body>
+  <h1>Track Your Complaint</h1>
+  <p>Enter the Complaint ID you received upon submission.</p>
+
+  <div class="track-container">
+    <div>
+      <input type="text" id="complaintIdInput" placeholder="Enter Complaint ID...">
+      <button onclick="trackComplaint()">Track</button>
+    </div>
+
+    <div id="resultBox">
+      </div>
+  </div>
+
+  <script>
+   async function trackComplaint() {
+      const complaintId = document.getElementById('complaintIdInput').value;
+      const resultBox = document.getElementById('resultBox');
+
+      if (!complaintId) {
+        resultBox.innerHTML = '<p style="color: red;">Please enter a Complaint ID.</p>';
+        return;
+      }
+
+      // 1. Fetch the complaint data
+      const res = await fetch(`/track-complaint?complaintId=${complaintId}`);
+      const result = await res.json();
+
+      if (!result.success) {
+        resultBox.innerHTML = '<p style="color: red;">Invalid Complaint ID. Please check and try again.</p>';
+      } else {
+        // 2. Display the complaint data
+        const c = result.data;
+        
+        // --- NEW EDIT LOGIC ---
+        // This variable will hold the HTML for the complaint section
+        let complaintDisplay = `
+          <p><span>Complaint:</span></p>
+          <div id="complaint-text-div" style="padding: 10px; background: #f4f4f4; border-radius: 5px;">
+            ${c.complaint}
+          </div>
+          <div id="edit-button-div" style="margin-top: 10px;"></div>
+        `;
+
+        // This is the HTML for the edit form (hidden by default)
+        let editForm = `
+          <div id="edit-form-div" style="display: none;">
+            <p><strong>Edit your complaint:</strong></p>
+            <textarea id="complaint-edit-text" style="width: 95%; min-height: 80px; padding: 10px;">${c.complaint}</textarea>
+            <button onclick="submitComplaintEdit('${c.complaintId}')" style="width: 100%; margin-top: 10px; background: #28a745;">Save Changes</button>
+            <button onclick="cancelEdit()" style="width: 100%; margin-top: 5px; background: #888;">Cancel</button>
+          </div>
+        `;
+        // --- END EDIT LOGIC ---
+
+        resultBox.innerHTML = `
+          <p><span>Status:</span> ${c.status}</p>
+          <p><span>Technician:</span> ${c.technician}</p>
+          <p><span>Tech Contact:</span> ${c.techContact || 'N/A'}</p>
+          <hr>
+          <p><span>Your Name:</span> ${c.name}</p>
+          <p><span>Submitted:</span> ${c.submitted}</p>
+          
+          <!-- This is where the new edit-in-place form will go -->
+          ${complaintDisplay}
+          ${editForm}
+          
+          <!-- Feedback form (shows only if completed and no feedback given) -->
+          <div id="feedbackForm" style="display: none;">
+            <h3>Work Completed!</h3>
+            <p>Please provide your feedback on the service:</p>
+            <textarea id="feedbackText" placeholder="Write your feedback here..."></textarea>
+            <button onclick="submitFeedback('${c.complaintId}')">Submit Feedback</button>
+          </div>
+        `;
+
+        // 4. Logic to show feedback OR edit button
+        if (c.status === 'Completed' && !c.feedback) {
+          document.getElementById('feedbackForm').style.display = 'block';
+        } else if (c.status === 'Completed' && c.feedback) {
+            resultBox.innerHTML += `<p><span>Feedback:</span> ${c.feedback}</p>`;
+        }
+        
+        // 5. NEW: Show the "Edit" button ONLY if status is "Pending"
+        if (c.status === 'Pending') {
+          document.getElementById('edit-button-div').innerHTML = `
+            <button onclick="showEditForm()">Edit Complaint</button>
+          `;
+        }
+      }
+    }
+    // ===== ADD THIS NEW FUNCTION =====
+    function showEditForm() {
+      // Hide the plain text and edit button
+      document.getElementById('complaint-text-div').style.display = 'none';
+      document.getElementById('edit-button-div').style.display = 'none';
+
+      // Show the edit form
+      document.getElementById('edit-form-div').style.display = 'block';
+    }
+
+    // ===== ADD THIS NEW FUNCTION =====
+    function cancelEdit() {
+      // Show the plain text and edit button
+      document.getElementById('complaint-text-div').style.display = 'block';
+      document.getElementById('edit-button-div').style.display = 'block';
+
+      // Hide the edit form
+      document.getElementById('edit-form-div').style.display = 'none';
+    }
+
+    async function submitFeedback(complaintId) {
+      const feedback = document.getElementById('feedbackText').value;
+      if (!feedback) {
+        alert('Please write some feedback before submitting.');
+        return;
+      }
+
+      const res = await fetch('/submit-feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ complaintId, feedback })
+      });
+
+      const result = await res.json();
+      if (result.success) {
+        alert('Thank you! Your feedback has been submitted.');
+        trackComplaint(); // Refresh the details
+      } else {
+        alert('Error submitting feedback.');
+      }
+    }
+    // ===== ADD THIS NEW FUNCTION =====
+    async function submitComplaintEdit(complaintId) {
+      const newText = document.getElementById('complaint-edit-text').value;
+
+      if (!newText) {
+        alert('Complaint description cannot be empty.');
+        return;
+      }
+
+      const res = await fetch('/edit-complaint', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ complaintId, newText })
+      });
+
+      const result = await res.json();
+
+      if (result.success) {
+        alert('Complaint updated successfully!');
+        trackComplaint(); // Refresh the details to show the new text
+      } else {
+        alert('Error updating complaint: ' + (result.message || 'Please try again.'));
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+[
+  {
+    "username": "34567",
+    "passwordHash": "$2b$10$I1hrTCISXfz9m4CV69ELkeLBDsewPB6l7Sx4879Qe6HjO13c/gxs."
+  },
+  {
+    "username": "34185",
+    "passwordHash": "$2b$10$rKwW8.IDDlGBjqo9qTVlaO4k8o/osiAvvCyGcO59LvuQG3SQhldv2"
+  },
+  {
+    "username": "33704",
+    "passwordHash": "$2b$10$XKNaHxoRv7CRvoUKEeKGPe1OA.W5wjq6VygAhMNcafnjC.Qje9rvG"
+  },
+  {
+    "username": "23456",
+    "passwordHash": "$2b$10$Ph0cXAZxBhQJ1ZqOHDkTOeqdllIWR7MZZWNs7tNGzdzKKzRCdfNE6"
+  },
+  {
+    "username": "34007",
+    "passwordHash": "$2b$10$lfRfsmBgWhz0exVl4KBi8uR7PgCqDaCRs6eG04eCXFbF/hyfUUKUC"
+  }
+]

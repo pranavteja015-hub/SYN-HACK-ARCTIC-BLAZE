@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VNIT Hostel Grievance Management System</title>
+  <link rel="icon" href="vnitlogo.jpeg" type="image/jpeg">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      background: url("vnitpic.jpg") no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Overlay for readability */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 0;
+    }
+
+    /* Navbar */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 2;
+    }
+
+    nav h2 {
+      font-size: 1.4em;
+      color: #fff;
+    }
+
+    .menu-icon {
+      font-size: 28px;
+      cursor: pointer;
+      color: white;
+      z-index: 3;
+    }
+
+    .menu {
+      display: none;
+      position: absolute;
+      top: 60px;
+      left: 10px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #333;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      width: 250px;
+      padding: 15px;
+      z-index: 5;
+    }
+
+    .menu a {
+      display: block;
+      color: #333;
+      text-decoration: none;
+      padding: 10px;
+      border-radius: 5px;
+      font-weight: 500;
+    }
+
+    .menu a:hover {
+      background: #f2f2f2;
+    }
+
+    .submenu {
+      margin-left: 15px;
+      display: none;
+    }
+
+    .submenu a {
+      font-size: 0.9em;
+      padding: 8px;
+    }
+
+    /* Main Content */
+    .main {
+      position: relative;
+      z-index: 1;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      padding: 30px;
+    }
+
+    .main h1 {
+      font-size: 2.5em;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.6);
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .section {
+      background: rgba(255, 255, 255, 0.9);
+      color: #000;
+      width: 85%;
+      margin: 30px auto;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+
+    .section h2 {
+      color: #004aad;
+      margin-bottom: 10px;
+    }
+
+    .section ul {
+      margin-left: 20px;
+    }
+
+    /* Footer */
+    footer {
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      text-align: center;
+      padding: 20px 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    footer img {
+      width: 60px;
+      height: auto;
+      border-radius: 50%;
+      margin-bottom: 10px;
+    }
+
+    footer p {
+      font-size: 0.9em;
+      color: #ccc;
+    }
+
+    /* ===== CHANGE 1: HIDE SECTIONS ===== */
+    .section, #contact {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav>
+    <!-- We group the icon and title together so they stay on the left -->
+    <div style="display: flex; align-items: center;">
+      <span class="menu-icon" onclick="toggleMenu()">☰</span>
+      <h2 style="margin-left: 20px;">VNIT Hostel Grievance</h2>
+    </div>
+
+    <div class="menu" id="menuBox">
+      <a href="home.html">🏠 Home</a>
+      
+      <!-- New Admin Link (no submenu) -->
+      <a href="/admin">🔐 Admin Login</a>
+
+      <!-- New Student Submenu -->
+      <a href="#" onclick="toggleSubmenu('studentMenu')">🎓 Student ▼</a>
+      <div class="submenu" id="studentMenu">
+        <a href="/student-login">Register a Complaint</a>
+        <a href="/track">Track a Complaint</a>
+      </div>
+
+      <!-- Other Links -->
+      <a href="#" onclick="event.preventDefault(); showSection('about')">ℹ️ About</a>
+      <a href="#" onclick="event.preventDefault(); showSection('features')">⭐ Features</a>
+      <a href="#" onclick="event.preventDefault(); showSection('contact')">📞 Contact Us</a>
+      <!-- "Track Complaint" is removed from here since it's now under "Student" -->
+    
+    </div>
+  </nav>
+
+  <div class="main">
+    <h1>🏫 VNIT Hostel Grievance Management System</h1>
+    <p>Empowering VNIT students with a faster and smarter way to report hostel issues.</p>
+  </div>
+
+  <div class="section" id="about">
+    <h2>About the System</h2>
+    <p>
+      The VNIT Hostel Grievance Management System is a digital platform designed to make complaint registration,
+      tracking, and resolution simple, transparent, and efficient for hostel residents and administrators.
+    </p>
+  </div>
+
+  <div class="section" id="features">
+    <h2>Key Features</h2>
+    <ul>
+      <li>💡 Easy online complaint registration for students.</li>
+      <li>🧰 Category-based issue submission (Electrical, Water, Cleanliness, Technical).</li>
+      <li>📊 Admin dashboard for tracking and resolving complaints efficiently.</li>
+      <li>🔔 Email or on-page notifications for updates.</li>
+      <li>📅 Time-slot selection for complaint handling visits.</li>
+      <li>📱 Fully responsive interface, accessible on mobile or desktop.</li>
+    </ul>
+  </div>
+
+  <footer id="contact">
+    <img src="vnitlogo.jpeg" alt="VNIT Logo">
+    <p><strong>Visvesvaraya National Institute of Technology, Nagpur</strong></p>
+    <p>Email: hostelhelp@vnit.ac.in | Phone: +91 98765 43210</p>
+    <p>© 2025 VNIT Hostel Grievance Management System</p>
+  </footer>
+
+  <script>
+    // ===== CHANGE 3: NEW FUNCTION =====
+    function showSection(sectionId) {
+      // 1. First, hide all the content sections
+      document.getElementById('about').style.display = 'none';
+      document.getElementById('features').style.display = 'none';
+      document.getElementById('contact').style.display = 'none';
+
+      // 2. Then, show only the one that was clicked
+      document.getElementById(sectionId).style.display = 'block';
+
+      // 3. (Optional) This will also close the menu after clicking a link
+      document.getElementById('menuBox').style.display = 'none';
+    }
+
+    // --- Your original functions ---
+    function toggleMenu() {
+      const menu = document.getElementById("menuBox");
+      menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+
+    function toggleSubmenu(menuId) {
+      const submenu = document.getElementById(menuId);
+      submenu.style.display = submenu.style.display === "block" ? "none" : "block";
+    }
+  </script>
+</body>
+</html>

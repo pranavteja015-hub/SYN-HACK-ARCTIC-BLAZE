@@ -1,0 +1,20 @@
+[
+  {
+    "username": "superadmin",
+    "passwordHash": "$2b$10$o1.QyqPs9yM5MxtF7Hv7b.CQT7H6NFCMg1ST6FB4s0ulAD7uTOtwS",
+    "recoveryEmail": "superadmin@vnit.ac.in",
+    "isSuperAdmin": true
+  },
+  {
+    "username": "Vignesh",
+    "passwordHash": "$2b$10$L8GH/5B7axsq6kPFOlac4.8Q4/e3lhWSNymH/oVtEnAvpfbQhOlJG",
+    "recoveryEmail": "pranavteja015@gmail.com",
+    "isSuperAdmin": false
+  },
+  {
+    "username": "pranav",
+    "passwordHash": "$2b$10$Ay0qfrwqvQcEDeeJ2OVKzuFc5sXCNAZBbL.wAFEmI9j0OdQXMjX3.",
+    "recoveryEmail": "pranavteja015@gmail.com",
+    "isSuperAdmin": false
+  }
+]

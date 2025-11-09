@@ -1,0 +1,153 @@
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+/* ===== Student Page ===== */
+.student-body {
+  background: url("vnitpic.jpg") no-repeat center center fixed;
+  background-size: cover;
+  color: white;
+  text-align: center;
+  padding: 50px;
+}
+
+h1 {
+  font-size: 2em;
+  text-shadow: 1px 1px 4px black;
+}
+
+.complaint-form {
+  background: rgba(255,255,255,0.95);
+  color: black;
+  border-radius: 15px;
+  padding: 25px;
+  display: inline-block;
+  text-align: left;
+  width: 340px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-top: 5px;
+}
+
+button {
+  background-color: #3345B3;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  margin-top: 15px;
+  width: 100%;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+button:hover {
+  background-color: #1f2a8a;
+}
+
+/* ===== Menu Dropdown ===== */
+.menu-icon {
+  position: fixed;
+  top: 15px;
+  right: 25px;
+  font-size: 30px;
+  color: white;
+  cursor: pointer;
+  z-index: 999;
+}
+
+.dropdown {
+  display: none;
+  position: fixed;
+  top: 55px;
+  right: 25px;
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  border-radius: 8px;
+}
+
+.dropdown a {
+  color: #000;
+  padding: 10px 20px;
+  display: block;
+  text-decoration: none;
+}
+
+.dropdown a:hover {
+  background-color: #3345B3;
+  color: white;
+}
+
+.show {
+  display: block;
+}
+
+/* ===== Admin Login ===== */
+.admin-body {
+  background: url("vnitpic.jpg") no-repeat center center fixed;
+  background-size: cover;
+  color: white;
+  text-align: center;
+  padding-top: 60px;
+}
+
+.admin-container {
+  background: rgba(255, 255, 255, 0.95);
+  color: black;
+  border-radius: 12px;
+  padding: 30px;
+  display: inline-block;
+  width: 340px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+/* ===== Admin Dashboard ===== */
+.dashboard-body {
+  background: url("vnitpic.jpg") no-repeat center center fixed;
+  background-size: cover;
+  color: white;
+  font-family: "Poppins", sans-serif;
+  text-align: center;
+  padding: 30px;
+}
+
+table {
+  width: 95%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.95);
+  color: black;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+th {
+  background: #3345B3;
+  color: white;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+/* Add this new rule to hide sections by default */
+  .section, #contact {
+    display: none;
+  }
